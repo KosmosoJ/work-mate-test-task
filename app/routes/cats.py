@@ -2,12 +2,39 @@ from fastapi import APIRouter, Depends
 from database.database import get_session
 from sqlalchemy.ext.asyncio import AsyncSession
 from utils import cats as cats_utils
+from schemas import cats as cats_schema
 
-router = APIRouter(tags=['cats'])
+router = APIRouter()
 
 
 @router.get('/cats')
 async def get_all_cats(session:AsyncSession = Depends(get_session)):
     """  Получение всех котят из БД """
     cats = await cats_utils.db_get_all_cats(session)
-    return {'cats': {cat.id:[cat.kind, cat.age, cat.description]} for cat in cats}
+    return {'cats': [{'cat_id':cat.id, 'cat_kind':cat.kind, 'cat_age':cat.age,
+                      'cat_description':cat.description} for cat in cats] }
+
+@router.get('/cat/{id}')
+async def get_cat_by_id(id:int, session:AsyncSession = Depends(get_session)):
+    """ Получение котенка из БД """
+    cat = await cats_utils.db_get_cat_info(id, session)
+    return {'cat_id':cat}
+
+@router.post('/cat')
+async def create_cat(cat_info:cats_schema.CreateCatSchema,
+                     session:AsyncSession = Depends(get_session)):
+    """ Добавление котенка в базу данных """
+    cat = await cats_utils.db_create_cat_info(cat_info, session)
+    return cat
+
+@router.put('/cat/{id}')
+async def edit_cat(id:int, cat_info:cats_schema.CatSchema, session:AsyncSession = Depends(get_session)):
+    """ Изменение информации о котенке по ID """
+    # TODO
+    ...
+    
+@router.delete('/cat/{id}')
+async def delete_cat(id:int, session:AsyncSession = Depends(get_session)):
+    """ Удаление котенка по ID """
+    # TODO
+    ...

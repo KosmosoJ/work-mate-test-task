@@ -1,7 +1,6 @@
 from fastapi import FastAPI
+from routes.cats import router as cat_router
 
 app = FastAPI()
 
-@app.get('hehe')
-async def check_foo():
-    return {'message':'app started'}
+app.include_router(cat_router, tags=['cats'])
