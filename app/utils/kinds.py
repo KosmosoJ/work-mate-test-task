@@ -19,6 +19,7 @@ async def create_kind(kind_name:str, session:AsyncSession):
     return new_kind
 
 async def create_or_get_kind_id(kind_name:str, session:AsyncSession):
+    """ Создание или получение ID породы по названию породы """
     kind = await session.execute(select(Kind).where(Kind.title == kind_name.lower()))
     kind = kind.scalars().first()
     

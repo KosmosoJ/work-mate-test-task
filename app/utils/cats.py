@@ -39,7 +39,7 @@ async def db_delete_cat(id:int, session:AsyncSession):
     
 async def db_create_cat_info(cat_info:cats_schema.CreateCatSchema,
                              session:AsyncSession):
-    """ Создание или получение ID породы """
+    """ Создание информации о котенке"""
     cat = Cat(kind= await kinds_utils.create_or_get_kind_id(cat_info.kind, session),
               age=cat_info.age,
               description=cat_info.description)
