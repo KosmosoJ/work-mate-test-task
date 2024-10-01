@@ -1,5 +1,5 @@
 from sqlalchemy import Integer, String, Column, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Mapped
 from .database import Base 
 
 
@@ -8,6 +8,7 @@ class Kind(Base):
     
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     title = Column(String(), nullable=False)
+    
     
 class Cat(Base):
     __tablename__ = 'cats'
