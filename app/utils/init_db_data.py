@@ -14,6 +14,7 @@ async def create_init_data():
     """ Внесение базовых данных в БД """
     
     kinds = ['Британец', 'Сиамский', 'Дворняжка', 'Бурма', 'Сфинкс']
+    colors = ['Черный', 'Серый', 'Белый', 'Рыжий', 'Пятнистый']
     descriptions = ['Сиамская кошка — одна из известных пород кошек сиамо-ориентальной группы.','бурманская короткошёрстная кошка — порода короткошёрстных кошек. Кошку бурманской породы отличает мускулистое, ' , 'милый котеночек ^_^', 'Нашли под деревом, ищет свой домик', 'Очень любит руки']
     async with get_async_session_context() as session:
         try:
@@ -21,6 +22,6 @@ async def create_init_data():
                 ...
         except HTTPException:
             for i in range(10):
-                cat = CreateCatSchema(kind=random.choice(kinds), age=random.randint(1,12), description=random.choice(descriptions))
+                cat = CreateCatSchema(kind=random.choice(kinds), age=random.randint(1,12), color=random.choice(colors), description=random.choice(descriptions))
                 await db_create_cat_info(cat, session)
         
