@@ -19,17 +19,7 @@ async def get_all_cats(
     else:
         cats = await cats_utils.db_get_all_cats(session)
 
-    return {
-        "cats": [
-            {
-                "cat_id": cat.id,
-                "cat_kind": cat.kind,
-                "cat_age": cat.age,
-                "cat_description": cat.description,
-            }
-            for cat in cats
-        ]
-    }
+    return [{"id":cat.id, 'kind':cat.kind, 'age':cat.age, 'description':cat.description} for cat in cats ]
 
 
 @router.get("/cat/{id}")
