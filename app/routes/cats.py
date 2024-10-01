@@ -8,7 +8,7 @@ from typing import Optional
 router = APIRouter()
 
 
-@router.get("/cats")
+@router.get("/cats", response_model=list[cats_schema.CatSchema])
 async def get_all_cats(
     kind: Optional[str] = None, session: AsyncSession = Depends(get_session)
 ):
@@ -22,14 +22,14 @@ async def get_all_cats(
     return [{"id":cat.id, 'kind':cat.kind, 'age':cat.age, 'color':cat.color, 'description':cat.description} for cat in cats ]
 
 
-@router.get("/cat/{cat_id}")
+@router.get("/cat/{cat_id}", response_model=cats_schema.CatSchema)
 async def get_cat_by_id(cat_id: int, session: AsyncSession = Depends(get_session)):
     """Получение котенка из БД"""
     cat = await cats_utils.db_get_cat_info(cat_id, session)
-    return {"cat_id": cat}
+    return cat
 
 
-@router.post("/cat")
+@router.post("/cat", response_model=cats_schema.CatSchema)
 async def create_cat(
     cat_info: cats_schema.CreateCatSchema, session: AsyncSession = Depends(get_session)
 ):
@@ -38,7 +38,7 @@ async def create_cat(
     return cat
 
 
-@router.put("/cat/{cat_id}")
+@router.put("/cat/{cat_id}", response_model=cats_schema.CatSchema)
 async def edit_cat(
     cat_id: int,
     cat_info: cats_schema.CreateCatSchema,
@@ -49,7 +49,7 @@ async def edit_cat(
     return cat
 
 
-@router.delete("/cat/{cat_id}")
+@router.delete("/cat/{cat_id}", response_model=cats_schema.CatSchema)
 async def delete_cat(cat_id: int, session: AsyncSession = Depends(get_session)):
     """Удаление котенка по ID"""
     cat = await cats_utils.db_delete_cat(cat_id, session)
