@@ -19,10 +19,10 @@ async def get_all_cats(
     else:
         cats = await cats_utils.db_get_all_cats(session)
 
-    return [{"id":cat.id, 'kind':cat.kind, 'age':cat.age, 'description':cat.description} for cat in cats ]
+    return [{"id":cat.id, 'kind':cat.kind, 'age':cat.age, 'color':cat.color, 'description':cat.description} for cat in cats ]
 
 
-@router.get("/cat/{id}")
+@router.get("/cat/{cat_id}")
 async def get_cat_by_id(cat_id: int, session: AsyncSession = Depends(get_session)):
     """Получение котенка из БД"""
     cat = await cats_utils.db_get_cat_info(cat_id, session)
@@ -38,10 +38,10 @@ async def create_cat(
     return cat
 
 
-@router.put("/cat/{id}")
+@router.put("/cat/{cat_id}")
 async def edit_cat(
     cat_id: int,
-    cat_info: cats_schema.CatSchema,
+    cat_info: cats_schema.CreateCatSchema,
     session: AsyncSession = Depends(get_session),
 ):
     """Изменение информации о котенке по ID"""
@@ -49,7 +49,7 @@ async def edit_cat(
     return cat
 
 
-@router.delete("/cat/{id}")
+@router.delete("/cat/{cat_id}")
 async def delete_cat(cat_id: int, session: AsyncSession = Depends(get_session)):
     """Удаление котенка по ID"""
     cat = await cats_utils.db_delete_cat(cat_id, session)

@@ -39,7 +39,7 @@ async def db_get_cat_info(cat_id: int, session: AsyncSession):
 
 
 async def db_edit_cat_info(
-    cat_id: int, cat_info: cats_schema.CatSchema, session: AsyncSession
+    cat_id: int, cat_info: cats_schema.CreateCatSchema, session: AsyncSession
 ):
     """Изменение информации о котенке"""
     cat = await session.execute(select(Cat).where(Cat.id == cat_id))
@@ -48,9 +48,10 @@ async def db_edit_cat_info(
     if not cat:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
-    cat.kind, cat.age, cat.description = (
-        cat_info.kind,
+    cat.kind, cat.age, cat.color, cat.description = (
+        await kinds_utils.create_or_get_kind_id(cat_info.kind, session),
         cat_info.age,
+        cat_info.color,
         cat_info.description,
     )
 
@@ -78,6 +79,7 @@ async def db_create_cat_info(
     cat = Cat(
         kind=await kinds_utils.create_or_get_kind_id(cat_info.kind, session),
         age=cat_info.age,
+        color=cat_info.color,
         description=cat_info.description,
     )
     session.add(cat)

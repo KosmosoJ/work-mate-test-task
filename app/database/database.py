@@ -1,6 +1,5 @@
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, DeclarativeBase
 from os import environ
 from dotenv import find_dotenv, load_dotenv
 
@@ -11,7 +10,8 @@ if find_dotenv():
 engine = create_async_engine(database_url, echo=True)
 async_session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
-Base = declarative_base()
+class Base(DeclarativeBase):
+    ...
 
 async def get_session() -> AsyncSession:
     async with async_session() as session:
